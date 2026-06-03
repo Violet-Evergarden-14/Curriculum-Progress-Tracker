@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>人大高瓴AI学院 · 学习进度追踪器 | 支持自定义默认模板</title>
+    <title>人大高瓴AI学院 · 学习进度追踪器 | 培养方案完整版</title>
     <style>
         * {
             margin: 0;
@@ -352,7 +352,7 @@
         <div class="header">
             <div class="title-section">
                 <h1>📚 高瓴人工智能学院 · 学业进度管家</h1>
-                <p>2025级人工智能专业培养方案 | 支持保存当前状态为默认模板，重置时可恢复到自定义初始配置</p>
+                <p>2025级人工智能专业培养方案 (立本51学分 | 专业82学分 | 卓越18学分 | 总计151学分)</p>
             </div>
             <div class="stats-card">
                 <div class="stat"><div class="stat-number">{{ totalEarnedCredits }}</div><div class="stat-label">已获学分</div></div>
@@ -432,89 +432,149 @@
                 </div>
             </div>
         </div>
-        <footer>✔️ “保存当前为默认模板”可将您修改后的课程结构设为新的初始状态；“重置到默认模板”会加载您保存的模板（若有），否则恢复出厂设置；“恢复出厂设置”会清空自定义模板，还原到最初培养方案。</footer>
+        <footer>✔️ “保存当前为默认模板”可将您修改后的课程结构设为新的初始状态；“重置到默认模板”会加载您保存的模板（若有），否则恢复出厂设置；“恢复出厂设置”会清空自定义模板，还原到基于官方培养方案（立本51学分）的初始配置。</footer>
     </div>
 </div>
 
 <script>
-// 原始出厂配置（与之前完全一致）
+// ----------------------------------------------------------------------
+// 根据提供的 ai_progress_2026-06-03.json 完整构建课程体系，立本模块总学分精准 51分
+// 专业模块82学分，卓越模块18学分，总151学分
+// ----------------------------------------------------------------------
 function buildFactoryModules() {
-    return [
-        { id: 'liben_module', name: '一、立本模块（47学分）', icon: '🌱', items: [
-            { type: 'course', id: 'marx', name: '马克思主义基本原理', credits: 3, completed: false, note: '', semester: '大一/大二', enableMultiple: false },
-            { type: 'course', id: 'mao', name: '毛泽东思想和中国特色社会主义理论体系概论', credits: 5, completed: false, note: '', semester: '大二', enableMultiple: false },
-            { type: 'course', id: 'modern', name: '中国近现代史纲要', credits: 3, completed: false, note: '', semester: '大一', enableMultiple: false },
-            { type: 'course', id: 'moral', name: '思想道德与法治', credits: 3, completed: false, note: '', semester: '大一', enableMultiple: false },
-            { type: 'course', id: 'xi', name: '习近平新时代中国特色社会主义思想概论', credits: 3, completed: false, note: '', semester: '大二', enableMultiple: false },
-            { type: 'course', id: 'policy', name: '形势与政策', credits: 2, completed: false, note: '', semester: '贯穿学期', enableMultiple: false },
-            { type: 'course', id: 'ide_elec', name: '思政选修模块 (任选1门)', credits: 2, completed: false, note: '四史/宪法等', semester: '大二/大三', enableMultiple: false },
-            { type: 'course', id: 'foreign', name: '公共外语课 (分级认定)', credits: 2, completed: false, note: 'II/III/IV级6学分，可自行调整', semester: '大一/大二', enableMultiple: false },
-            { type: 'course', id: 'fresh_guide', name: '新生引导课', credits: 2, completed: false, note: '', semester: '大一上', enableMultiple: false },
-            { type: 'group', id: 'science_group', name: '科学与人文素养课 (需选修6学分)', requiredCredits: 6, enableMultiple: true,
-              children: [
-                  { id: 'sci1', name: '科学技术史', credits: 2, completed: false, note: '', semester: '大一/大二' },
-                  { id: 'art1', name: '艺术导论', credits: 2, completed: false, note: '', semester: '大一/大二' },
-                  { id: 'logic1', name: '逻辑与批判性思维', credits: 2, completed: false, note: '', semester: '大二' },
-                  { id: 'env1', name: '环境与可持续发展', credits: 2, completed: false, note: '', semester: '大二' },
-                  { id: 'philo1', name: '哲学入门', credits: 2, completed: false, note: '', semester: '大一/大二' },
-                  { id: 'soc1', name: '社会学概论', credits: 2, completed: false, note: '', semester: '大二' }
-              ] },
-            { type: 'course', id: 'pe_core', name: '公共体育课-核心基础 (游泳/太极拳等2门)', credits: 2, completed: false, note: '大一大二必修', semester: '大一/大二', enableMultiple: false },
-            { type: 'course', id: 'pe_special', name: '公共体育课-专项基础课', credits: 2, completed: false, note: '大一大二选修', semester: '大一/大二', enableMultiple: false },
-            { type: 'course', id: 'aesthetic', name: '美育课程', credits: 2, completed: false, note: '', semester: '大一/大二', enableMultiple: false },
-            { type: 'course', id: 'labor', name: '劳动教育 (理论与实践)', credits: 1, completed: false, note: '', semester: '大一至大三', enableMultiple: false },
-            { type: 'course', id: 'mental', name: '心理健康教育', credits: 2, completed: false, note: '', semester: '大一', enableMultiple: false },
-            { type: 'course', id: 'career', name: '职业生涯教育', credits: 1, completed: false, note: '', semester: '大二/大三', enableMultiple: false },
-            { type: 'course', id: 'military', name: '军事课 (军事理论+技能)', credits: 4, completed: false, note: '', semester: '大一', enableMultiple: false },
-            { type: 'course', id: 'volunteer', name: '志愿服务 (≥24小时+8次)', credits: 2, completed: false, note: '', semester: '灵活安排', enableMultiple: false }
+    // 完全基于配置文件构建，确保立本模块各分组要求学分及单课程总和 = 51
+    const modules = [
+      {
+        id: "liben_module",
+        name: "一、立本模块（51学分）",
+        icon: "🌱",
+        items: [
+          { type: "group", id: "group_ideology", name: "思想政治必修课", requiredCredits: 19, enableMultiple: true,
+            children: [
+              { id: "c1", name: "思想道德与法治", credits: 3, completed: false, note: "", semester: "1" },
+              { id: "c2", name: "中国近现代史纲要", credits: 3, completed: false, note: "", semester: "2" },
+              { id: "c3", name: "马克思主义基本原理", credits: 3, completed: false, note: "", semester: "3" },
+              { id: "c4", name: "习近平新时代中国特色社会主义思想概论", credits: 3, completed: false, note: "", semester: "3" },
+              { id: "c5", name: "毛泽东思想和中国特色社会主义理论体系概论", credits: 3, completed: false, note: "", semester: "4" },
+              { id: "c6", name: "形势与政策", credits: 2, completed: false, note: "", semester: "ALL" },
+              { id: "c7", name: "思政实践课", credits: 2, completed: false, note: "", semester: "ALL" }
+            ] },
+          { type: "course", id: "ide_elec", name: "思想政治选修课", credits: 2, completed: false, note: "选一门", semester: "ALL", enableMultiple: false },
+          { type: "group", id: "group_foreign", name: "公共外语课", requiredCredits: 6, enableMultiple: true,
+            children: [
+              { id: "en1", name: "大学英语综合Ⅲ", credits: 2, completed: false, note: "", semester: "1" },
+              { id: "en2", name: "提高模块课程（学术英语视听说）", credits: 2, completed: false, note: "", semester: "2" },
+              { id: "en3", name: "英语演讲", credits: 2, completed: false, note: "", semester: "3" }
+            ] },
+          { type: "course", id: "fresh_guide", name: "新生引导课", credits: 2, completed: false, note: "", semester: "1", enableMultiple: false },
+          { type: "group", id: "group_humanity", name: "科学与人文素养课", requiredCredits: 6, enableMultiple: true,
+            children: [
+              { id: "hum1", name: "课业Ⅰ", credits: 2, completed: false, note: "", semester: "" },
+              { id: "hum2", name: "课业Ⅱ", credits: 2, completed: false, note: "", semester: "" },
+              { id: "hum3", name: "课业Ⅲ", credits: 2, completed: false, note: "", semester: "" }
+            ] },
+          { type: "group", id: "group_pe", name: "公共体育课", requiredCredits: 4, enableMultiple: true,
+            children: [
+              { id: "pe1", name: "核心基础课Ⅰ", credits: 1, completed: false, note: "", semester: "1，2，3，4" },
+              { id: "pe2", name: "核心基础课Ⅱ", credits: 1, completed: false, note: "", semester: "1，2，3，4" },
+              { id: "pe3", name: "专项基础课Ⅰ", credits: 1, completed: false, note: "", semester: "1，2，3，4" },
+              { id: "pe4", name: "专项基础课Ⅱ", credits: 1, completed: false, note: "", semester: "1，2，3，4" }
+            ] },
+          { type: "course", id: "aesthetic", name: "美育课程", credits: 2, completed: false, note: "", semester: "", enableMultiple: false },
+          { type: "course", id: "labor", name: "劳动教育", credits: 1, completed: false, note: "", semester: "", enableMultiple: false },
+          { type: "course", id: "mental", name: "心理健康教育", credits: 2, completed: false, note: "", semester: "1", enableMultiple: false },
+          { type: "course", id: "career", name: "职业生涯教育", credits: 1, completed: false, note: "", semester: "", enableMultiple: false },
+          { type: "course", id: "military", name: "军事课", credits: 4, completed: false, note: "", semester: "", enableMultiple: false },
+          { type: "course", id: "volunteer", name: "志愿服务", credits: 2, completed: false, note: "总时长不少于 24 小时，总次数不少于 8 次", semester: "", enableMultiple: false }
         ] },
-        { id: 'major_module', name: '二、专业模块（82学分）', icon: '⚙️', items: [
-            { type: 'course', id: 'calc1', name: '高等数学I (B级)', credits: 5, completed: false, note: '', semester: '大一上', enableMultiple: false },
-            { type: 'course', id: 'calc2', name: '高等数学II (B级)', credits: 5, completed: false, note: '', semester: '大一下', enableMultiple: false },
-            { type: 'course', id: 'alg1', name: '高等代数I (计算机类 A级)', credits: 4, completed: false, note: '', semester: '大一上', enableMultiple: false },
-            { type: 'course', id: 'alg2', name: '高等代数II (计算机类 A级)', credits: 4, completed: false, note: '', semester: '大一下', enableMultiple: false },
-            { type: 'course', id: 'phys', name: '普通物理B', credits: 4, completed: false, note: '', semester: '大二', enableMultiple: false },
-            { type: 'course', id: 'prog', name: '程序设计', credits: 4, completed: false, note: '部类基础课', semester: '大一', enableMultiple: false },
-            { type: 'course', id: 'ai_py', name: '人工智能与Python程序设计', credits: 4, completed: false, note: '部类基础课', semester: '大二上', enableMultiple: false },
-            { type: 'course', id: 'ml', name: '机器学习基础 (荣誉课可替换)', credits: 3, completed: false, note: '', semester: '大二下', enableMultiple: false },
-            { type: 'course', id: 'opt', name: '最优化理论与方法', credits: 3, completed: false, note: '', semester: '大二下/大三上', enableMultiple: false },
-            { type: 'course', id: 'dl', name: '深度学习', credits: 3, completed: false, note: '', semester: '大三上', enableMultiple: false },
-            { type: 'course', id: 'nlp', name: '自然语言处理', credits: 3, completed: false, note: '', semester: '大三', enableMultiple: false },
-            { type: 'course', id: 'cv', name: '计算机视觉', credits: 3, completed: false, note: '', semester: '大三', enableMultiple: false },
-            { type: 'course', id: 'datastruct', name: '数据结构与算法', credits: 4, completed: false, note: '', semester: '大二', enableMultiple: false },
-            { type: 'course', id: 'db', name: '数据库系统概论', credits: 3, completed: false, note: '', semester: '大二下', enableMultiple: false },
-            { type: 'course', id: 'os', name: '操作系统', credits: 3, completed: false, note: '', semester: '大三', enableMultiple: false },
-            { type: 'course', id: 'compnet', name: '计算机网络', credits: 3, completed: false, note: '', semester: '大三', enableMultiple: false },
-            { type: 'course', id: 'prob', name: '概率论与数理统计', credits: 3, completed: false, note: '', semester: '大二', enableMultiple: false },
-            { type: 'course', id: 'discrete', name: '离散数学', credits: 4, completed: false, note: '', semester: '大二', enableMultiple: false },
-            { type: 'course', id: 'ml_adv', name: '高级机器学习', credits: 3, completed: false, note: '', semester: '大三下', enableMultiple: false },
-            { type: 'group', id: 'limit_group', name: '① 模块限选课 (至少选修8学分，其中AI核心领域≥1门)', requiredCredits: 8, enableMultiple: true,
-              children: [
-                  { id: 'limit_ds', name: '分布式机器学习', credits: 2, completed: false, note: '', semester: '大三' },
-                  { id: 'limit_robot', name: '智能机器人', credits: 2, completed: false, note: '', semester: '大三' },
-                  { id: 'limit_kg', name: '知识工程', credits: 2, completed: false, note: '', semester: '大三' },
-                  { id: 'limit_cv', name: '计算机视觉进阶', credits: 3, completed: false, note: '', semester: '大三/大四' },
-                  { id: 'limit_nlp', name: '自然语言处理进阶', credits: 3, completed: false, note: '', semester: '大三/大四' },
-                  { id: 'limit_rl', name: '强化学习', credits: 2, completed: false, note: '', semester: '大三' }
-              ] },
-            { type: 'course', id: 'indiv1', name: '② 个性化任选课 (AI类/跨学科，需修满6学分)', credits: 3, completed: false, note: '可拆分多个', semester: '大二至大四', enableMultiple: false },
-            { type: 'course', id: 'indiv2', name: '个性化任选课 (科研认定学分)', credits: 3, completed: false, note: '可用科研训练成果认定I/II', semester: '灵活安排', enableMultiple: false }
+      { id: "major_module", name: "二、专业模块（82学分）", icon: "⚙️", items: [
+          { type: "group", id: "group_calc", name: "分析部分", requiredCredits: 10, enableMultiple: true,
+            children: [
+              { id: "calc1", name: "高等数学Ⅰ", credits: 5, completed: false, note: "", semester: "1" },
+              { id: "calc2", name: "高等数学Ⅱ", credits: 5, completed: false, note: "", semester: "2" }
+            ] },
+          { type: "group", id: "group_alg", name: "代数部分", requiredCredits: 8, enableMultiple: true,
+            children: [
+              { id: "alg1", name: "高等代数Ⅰ", credits: 4, completed: false, note: "", semester: "1" },
+              { id: "alg2", name: "高等代数Ⅱ", credits: 4, completed: false, note: "", semester: "2" }
+            ] },
+          { type: "course", id: "phys", name: "普通物理B", credits: 4, completed: false, note: "", semester: "2", enableMultiple: false },
+          { type: "course", id: "prog", name: "程序设计", credits: 4, completed: false, note: "", semester: "1", enableMultiple: false },
+          { type: "course", id: "ai_py", name: "人工智能与 Python 程序设计", credits: 4, completed: false, note: "", semester: "2", enableMultiple: false },
+          { type: "group", id: "group_ai_core", name: "人工智能专业核心课", requiredCredits: 38, enableMultiple: true,
+            children: [
+              { id: "aimath", name: "人工智能数学基础（荣誉课程）", credits: 4, completed: false, note: "", semester: "3" },
+              { id: "probstat", name: "概率论与数理统计", credits: 4, completed: false, note: "", semester: "3" },
+              { id: "ai_intro", name: "人工智能引论（荣誉课程）", credits: 2, completed: false, note: "", semester: "3" },
+              { id: "ds_algo", name: "数据结构与算法 I", credits: 4, completed: false, note: "", semester: "3" },
+              { id: "cs_base1", name: "计算机系统基础 I", credits: 3, completed: false, note: "", semester: "3" },
+              { id: "algo_analysis", name: "算法分析与设计", credits: 3, completed: false, note: "", semester: "4" },
+              { id: "cs_base2", name: "计算机系统基础Ⅱ", credits: 3, completed: false, note: "", semester: "4" },
+              { id: "ai_ethics", name: "人工智能伦理与安全", credits: 2, completed: false, note: "", semester: "4" },
+              { id: "dl_intro", name: "深度学习导论（荣誉课程）", credits: 3, completed: false, note: "", semester: "5" },
+              { id: "ai_practice", name: "人工智能实践与应用选讲", credits: 2, completed: false, note: "", semester: "5" },
+              { id: "ai_sys", name: "人工智能系统", credits: 3, completed: false, note: "", semester: "6" },
+              { id: "optim", name: "最优化理论与方法（荣誉课程）", credits: 2, completed: false, note: "Optimization Theory and Methodology (Honor Course)(E)", semester: "4" },
+              { id: "ml_basic", name: "机器学习基础（荣誉课程）", credits: 3, completed: false, note: "Introduction to Machine Learning (Honor Course)(E)", semester: "4" }
+            ] },
+          { type: "group", id: "group_limit_ai", name: "模块限选课（在【人工智能类】选修 8 学分课程，其中要求在【人工智能核心领域】模块中至少选修 1 门课", requiredCredits: 8, enableMultiple: true,
+            children: [
+              { id: "limit1", name: "课程Ⅰ", credits: 0, completed: false, note: "", semester: "" },
+              { id: "limit2", name: "课程Ⅱ", credits: 0, completed: false, note: "", semester: "" },
+              { id: "limit3", name: "课程Ⅲ", credits: 0, completed: false, note: "", semester: "" },
+              { id: "limit4", name: "课程Ⅳ", credits: 0, completed: false, note: "", semester: "" }
+            ] },
+          { type: "group", id: "group_free", name: "个性化任选课（在【人工智能类】选修课、以及全校各学科大类开设的部类核心课、专业核心课、专业选修课中任选 6 学分课程）", requiredCredits: 6, enableMultiple: true,
+            children: [
+              { id: "free1", name: "课程Ⅰ", credits: 0, completed: false, note: "", semester: "" },
+              { id: "free2", name: "课程Ⅱ", credits: 0, completed: false, note: "", semester: "" },
+              { id: "free3", name: "课程Ⅲ", credits: 0, completed: false, note: "", semester: "" }
+            ] },
+          { type: "course", id: "research_award", name: "科研训练成果认定", credits: 0, completed: false, note: "科研成果如获得相应学分， 可以抵扣模块限选课或个性化任选课中任意一类的学分", semester: "ALL", enableMultiple: false },
+          { type: "course", id: "grad_underg", name: "本研贯通课模块", credits: 0, completed: false, note: "修读本模块课程可认证本科或研究生专业选修课学分（至多1次）", semester: "ALL", enableMultiple: false }
         ] },
-        { id: 'excellence_module', name: '三、卓越模块（18学分）', icon: '🏅', items: [
-            { type: 'course', id: 'research_train', name: '研究训练 (“求是学术”/校级创研课)', credits: 2, completed: false, note: '', semester: '大二至大四', enableMultiple: false },
-            { type: 'group', id: 'sci_training_group', name: '专业特色创新训练 - 科研训练三模块 (完成可得2学分)', requiredCredits: 2, enableMultiple: true,
-              children: [
-                  { id: 'sci_lec', name: '科研主题讲座 (8场)', credits: 0.7, completed: false, note: '每场2学时', semester: '大二/大三' },
-                  { id: 'sci_prog', name: '科研进展报告 (4次)', credits: 0.7, completed: false, note: '', semester: '大二/大三' },
-                  { id: 'sci_ach', name: '科研成果汇报 (含AI创研项目)', credits: 0.6, completed: false, note: '可被院级AI+创研替代', semester: '大三' }
-              ] },
-            { type: 'course', id: 'coding_boot', name: '专业特色创新训练 - 编程集训 + 《人工智能综合设计》', credits: 2, completed: false, note: '大一暑期完成考核', semester: '大一暑期', enableMultiple: false },
-            { type: 'course', id: 'intern', name: '专业实习 (3000字报告)', credits: 4, completed: false, note: '第七至八学期', semester: '大四', enableMultiple: false },
-            { type: 'course', id: 'thesis', name: '毕业论文 (设计) 15000字', credits: 4, completed: false, note: '', semester: '大四', enableMultiple: false },
-            { type: 'course', id: 'international', name: '国际性学习课程 (选修2学分)', credits: 2, completed: false, note: '国际暑期学校等', semester: '大二/大三', enableMultiple: false },
-            { type: 'course', id: 'public_elec', name: '公共选修课 (任意2学分)', credits: 2, completed: false, note: '', semester: '灵活安排', enableMultiple: false }
+      { id: "excellence_module", name: "三、卓越模块（18学分）", icon: "🏅", items: [
+          { type: "group", id: "group_research", name: "研究训练", requiredCredits: 2, enableMultiple: true,
+            children: [
+              { id: "research_proj", name: "参加 “求是学术”品牌研究项目等相关项目或完成调研报告等", credits: 2, completed: false, note: "", semester: "" },
+              { id: "research_course", name: "通过修读教务处组织开设的校级创研课获得研究训练学分", credits: 2, completed: false, note: "", semester: "" }
+            ] },
+          { type: "group", id: "group_sci_train", name: "科研训练", requiredCredits: 2, enableMultiple: true,
+            children: [
+              { id: "sci_lecture", name: "完成 8 场主题讲座学习", credits: 1, completed: false, note: "", semester: "" },
+              { id: "sci_report", name: "提交 4 次科研进展报告", credits: 0.5, completed: false, note: "", semester: "" },
+              { id: "sci_presentation", name: "完成科研成果汇报并提交汇报材料", credits: 0.5, completed: false, note: "参加1次院级AI+创研项目，可认证为完成科研成果汇报模块", semester: "" }
+            ] },
+          { type: "course", id: "coding_camp", name: "编程集训", credits: 2, completed: false, note: "", semester: "第一学年暑假", enableMultiple: false },
+          { type: "course", id: "internship", name: "专业实习", credits: 4, completed: false, note: "", semester: "7，8", enableMultiple: false },
+          { type: "course", id: "thesis", name: "毕业论文", credits: 4, completed: false, note: "", semester: "7，8", enableMultiple: false },
+          { type: "course", id: "global_learning", name: "国际性学习课程", credits: 2, completed: false, note: "", semester: "ALL", enableMultiple: false },
+          { type: "course", id: "public_elec", name: "公共选修课", credits: 2, completed: false, note: "", semester: "ALL", enableMultiple: false }
         ] }
     ];
+    // 确保所有 group 都拥有 enableMultiple = true，所有 course 拥有 enableMultiple = false，并补充必要字段
+    modules.forEach(mod => {
+      mod.items.forEach(item => {
+        if (!item.id) item.id = `gen_${Date.now()}_${Math.random()}`;
+        if (item.type === 'group') {
+          if (item.enableMultiple === undefined) item.enableMultiple = true;
+          if (!item.children) item.children = [];
+          item.children.forEach(child => {
+            if (!child.id) child.id = `ch_${Date.now()}_${Math.random()}`;
+            if (child.completed === undefined) child.completed = false;
+            if (child.note === undefined) child.note = "";
+            if (child.semester === undefined) child.semester = "";
+            if (child.credits === undefined) child.credits = 0;
+          });
+        } else if (item.type === 'course') {
+          if (item.enableMultiple === undefined) item.enableMultiple = false;
+          if (item.completed === undefined) item.completed = false;
+          if (item.note === undefined) item.note = "";
+          if (item.semester === undefined) item.semester = "";
+        }
+      });
+    });
+    return modules;
 }
 
 function normalizeModules(modules) {
@@ -525,13 +585,15 @@ function normalizeModules(modules) {
             if (item.type === 'group') {
                 if (item.requiredCredits === undefined) item.requiredCredits = 0;
                 if (item.enableMultiple === undefined) item.enableMultiple = true;
-                item.children.forEach(child => {
-                    if (!child.id) child.id = `ch_${Date.now()}_${Math.random()}`;
-                    if (child.credits === undefined) child.credits = 0;
-                    if (child.completed === undefined) child.completed = false;
-                    if (child.note === undefined) child.note = '';
-                    if (child.semester === undefined) child.semester = '';
-                });
+                if (item.children) {
+                    item.children.forEach(child => {
+                        if (!child.id) child.id = `ch_${Date.now()}_${Math.random()}`;
+                        if (child.credits === undefined) child.credits = 0;
+                        if (child.completed === undefined) child.completed = false;
+                        if (child.note === undefined) child.note = '';
+                        if (child.semester === undefined) child.semester = '';
+                    });
+                }
             } else if (item.type === 'course') {
                 if (item.credits === undefined) item.credits = 0;
                 if (item.completed === undefined) item.completed = false;
@@ -556,9 +618,9 @@ new Vue({
         newChildName: {},
         newChildCredit: {},
         newChildSemester: {},
-        fixedTotalCredits: 147,
+        fixedTotalCredits: 151,
         moduleFixedTotals: {
-            liben_module: 47,
+            liben_module: 51,
             major_module: 82,
             excellence_module: 18
         }
@@ -574,7 +636,7 @@ new Vue({
                     }
                     else if (item.type === 'group' || (item.type === 'course' && item.enableMultiple)) {
                         let groupEarned = 0;
-                        item.children.forEach(child => { if (child.completed) groupEarned += parseFloat(child.credits || 0); });
+                        if (item.children) item.children.forEach(child => { if (child.completed) groupEarned += parseFloat(child.credits || 0); });
                         earned += Math.min(groupEarned, item.requiredCredits);
                     }
                 });
@@ -594,12 +656,12 @@ new Vue({
                     if (item.type === 'course' && !item.enableMultiple) return item.name.toLowerCase().includes(kw) || (item.note || '').toLowerCase().includes(kw);
                     if (item.type === 'group' || (item.type === 'course' && item.enableMultiple)) {
                         const matchGroup = item.name.toLowerCase().includes(kw);
-                        const matchChild = item.children.some(c => c.name.toLowerCase().includes(kw) || (c.note || '').toLowerCase().includes(kw));
+                        const matchChild = item.children && item.children.some(c => c.name.toLowerCase().includes(kw) || (c.note || '').toLowerCase().includes(kw));
                         return matchGroup || matchChild;
                     }
                     return false;
                 }).map(item => {
-                    if ((item.type === 'group' || (item.type === 'course' && item.enableMultiple)) && !item.name.toLowerCase().includes(kw)) {
+                    if ((item.type === 'group' || (item.type === 'course' && item.enableMultiple)) && !item.name.toLowerCase().includes(kw) && item.children) {
                         return { ...item, children: item.children.filter(c => c.name.toLowerCase().includes(kw) || (c.note || '').toLowerCase().includes(kw)) };
                     }
                     return item;
@@ -613,6 +675,7 @@ new Vue({
     methods: {
         toggleModule(id) { this.openedModules[id] = !this.openedModules[id]; },
         getGroupCompletedCredits(group) {
+            if (!group.children) return "0.0";
             let sum = 0;
             group.children.forEach(c => { if (c.completed) sum += parseFloat(c.credits || 0); });
             return Math.min(sum, group.requiredCredits).toFixed(1);
@@ -626,208 +689,27 @@ new Vue({
                 if (item.type === 'course' && !item.enableMultiple && item.completed) earned += parseFloat(item.credits);
                 else if (item.type === 'group' || (item.type === 'course' && item.enableMultiple)) {
                     let groupEarned = 0;
-                    item.children.forEach(c => { if (c.completed) groupEarned += parseFloat(c.credits); });
+                    if (item.children) item.children.forEach(c => { if (c.completed) groupEarned += parseFloat(c.credits); });
                     earned += Math.min(groupEarned, item.requiredCredits);
                 }
             });
             return earned.toFixed(1);
         },
-        getModuleItemCount(moduleId) {
-            const mod = this.modules.find(m => m.id === moduleId);
-            if (!mod) return 0;
-            let count = 0;
-            mod.items.forEach(item => {
-                if (item.type === 'course' && !item.enableMultiple) count += 1;
-                else if (item.type === 'group' || (item.type === 'course' && item.enableMultiple)) count += 1;
-            });
-            return count;
-        },
-        toggleCourseToGroup(moduleId, itemId) {
-            const module = this.modules.find(m => m.id === moduleId);
-            if (!module) return;
-            const item = module.items.find(i => i.id === itemId);
-            if (!item || item.type !== 'course') return;
-            if (item.enableMultiple) {
-                const newGroup = {
-                    type: 'group',
-                    id: item.id,
-                    name: item.name,
-                    requiredCredits: item.credits,
-                    enableMultiple: true,
-                    children: [],
-                };
-                const index = module.items.findIndex(i => i.id === itemId);
-                module.items.splice(index, 1, newGroup);
-                this.saveToLocal();
-            }
-        },
-        toggleGroupToCourse(moduleId, groupId) {
-            const module = this.modules.find(m => m.id === moduleId);
-            if (!module) return;
-            const group = module.items.find(i => i.id === groupId);
-            if (!group || (group.type !== 'group' && !(group.type === 'course' && group.enableMultiple))) return;
-            if (!group.enableMultiple) {
-                if (group.children && group.children.length > 0) {
-                    if (!confirm('该课程组已有子课程，关闭多条目模式将会丢失所有子课程及其进度，确定要还原为普通课程吗？')) {
-                        group.enableMultiple = true;
-                        this.saveToLocal();
-                        return;
-                    }
-                }
-                const newCourse = {
-                    type: 'course',
-                    id: group.id,
-                    name: group.name,
-                    credits: group.requiredCredits || 0,
-                    completed: false,
-                    note: '',
-                    semester: '',
-                    enableMultiple: false
-                };
-                const index = module.items.findIndex(i => i.id === groupId);
-                module.items.splice(index, 1, newCourse);
-                this.saveToLocal();
-            }
-        },
-        addPlainCourse(moduleId) {
-            const module = this.modules.find(m => m.id === moduleId);
-            if (!module) return;
-            const name = this.newCourseName[moduleId]?.trim();
-            if (!name) { alert('请输入课程名称'); return; }
-            let cred = parseFloat(this.newCourseCredit[moduleId]);
-            if (isNaN(cred)) cred = 2;
-            const sem = this.newCourseSemester[moduleId]?.trim() || '';
-            module.items.push({ type: 'course', id: Date.now() + '_' + Math.random(), name, credits: cred, completed: false, note: '', semester: sem, enableMultiple: false });
-            this.newCourseName[moduleId] = '';
-            this.newCourseCredit[moduleId] = null;
-            this.newCourseSemester[moduleId] = '';
-            this.saveToLocal();
-        },
-        addChildToGroup(moduleId, groupId) {
-            const module = this.modules.find(m => m.id === moduleId);
-            if (!module) return;
-            const group = module.items.find(i => i.id === groupId);
-            if (!group) return;
-            const name = this.newChildName[groupId]?.trim();
-            if (!name) { alert('请输入子课程名称'); return; }
-            let cred = parseFloat(this.newChildCredit[groupId]);
-            if (isNaN(cred)) cred = 1;
-            const sem = this.newChildSemester[groupId]?.trim() || '';
-            if (!group.children) group.children = [];
-            group.children.push({ id: Date.now() + '_' + Math.random(), name, credits: cred, completed: false, note: '', semester: sem });
-            this.newChildName[groupId] = '';
-            this.newChildCredit[groupId] = null;
-            this.newChildSemester[groupId] = '';
-            this.saveToLocal();
-        },
-        deleteItem(moduleId, itemId) {
-            const module = this.modules.find(m => m.id === moduleId);
-            if (module) module.items = module.items.filter(i => i.id !== itemId);
-            this.saveToLocal();
-        },
-        deleteChildFromGroup(moduleId, groupId, childId) {
-            const module = this.modules.find(m => m.id === moduleId);
-            if (!module) return;
-            const group = module.items.find(i => i.id === groupId);
-            if (group && group.children) group.children = group.children.filter(c => c.id !== childId);
-            this.saveToLocal();
-        },
-        saveToLocal() {
-            localStorage.setItem('AIScheduleTrackerGroup', JSON.stringify({ modules: this.modules, version: '3.2' }));
-        },
-        // 保存当前状态为默认模板
-        saveAsDefault() {
-            const defaultTemplate = JSON.parse(JSON.stringify(this.modules));
-            localStorage.setItem('AIScheduleDefaultTemplate', JSON.stringify(defaultTemplate));
-            alert('当前课程结构已保存为默认模板，下次点击“重置到默认模板”时将恢复此状态。');
-        },
-        // 重置到用户保存的默认模板（如果存在），否则恢复到出厂设置
-        resetAllData() {
-            const defaultTemplateRaw = localStorage.getItem('AIScheduleDefaultTemplate');
-            if (defaultTemplateRaw) {
-                if (confirm('重置将清除所有勾选、备注和临时修改，恢复到您保存的默认模板。确定吗？')) {
-                    try {
-                        let template = JSON.parse(defaultTemplateRaw);
-                        template = normalizeModules(template);
-                        this.modules = template;
-                        this.newCourseName = {}; this.newCourseCredit = {}; this.newCourseSemester = {};
-                        this.newChildName = {}; this.newChildCredit = {}; this.newChildSemester = {};
-                        this.saveToLocal();
-                    } catch(e) { alert('默认模板读取失败，将恢复出厂设置'); this.resetToFactory(); }
-                }
-            } else {
-                if (confirm('尚未保存自定义默认模板，将恢复出厂设置。确定吗？')) {
-                    this.resetToFactory();
-                }
-            }
-        },
-        // 恢复出厂设置（清空自定义模板，回到最初培养方案）
-        resetToFactory() {
-            if (confirm('恢复出厂设置将清除您保存的默认模板，并恢复到最初的培养方案。确定吗？')) {
-                localStorage.removeItem('AIScheduleDefaultTemplate');
-                let factoryModules = buildFactoryModules();
-                factoryModules = normalizeModules(factoryModules);
-                this.modules = factoryModules;
-                this.newCourseName = {}; this.newCourseCredit = {}; this.newCourseSemester = {};
-                this.newChildName = {}; this.newChildCredit = {}; this.newChildSemester = {};
-                this.saveToLocal();
-                alert('已恢复出厂设置，自定义默认模板已清除。');
-            }
-        },
-        loadFromLocal() {
-            const raw = localStorage.getItem('AIScheduleTrackerGroup');
-            if (raw) {
-                try {
-                    const saved = JSON.parse(raw);
-                    if (saved.modules && saved.modules.length) {
-                        saved.modules.forEach(module => {
-                            module.items.forEach(item => {
-                                if (item.type === 'group' && item.enableMultiple === undefined) item.enableMultiple = true;
-                                if (item.type === 'course' && item.enableMultiple === undefined) item.enableMultiple = false;
-                            });
-                        });
-                        this.modules = saved.modules;
-                        return;
-                    }
-                } catch(e) {}
-            }
-            let defaultModules = buildFactoryModules();
-            defaultModules = normalizeModules(defaultModules);
-            this.modules = defaultModules;
-            this.modules.forEach(m => { if (this.openedModules[m.id] === undefined) this.openedModules[m.id] = true; });
-        },
-        exportData() {
-            const dataStr = JSON.stringify({ modules: this.modules, exportTime: new Date().toISOString() }, null, 2);
-            const blob = new Blob([dataStr], {type: 'application/json'});
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url; a.download = `ai_progress_${new Date().toISOString().slice(0,19)}.json`;
-            a.click(); URL.revokeObjectURL(url);
-        },
+        getModuleItemCount(moduleId) { return this.modules.find(m => m.id === moduleId)?.items.length || 0; },
+        toggleCourseToGroup(moduleId, itemId) { /* 保留原有逻辑 */ const m = this.modules.find(m => m.id === moduleId); if (!m) return; const idx = m.items.findIndex(i => i.id === itemId); if(idx===-1) return; const old = m.items[idx]; if(old.type !== 'course') return; if(old.enableMultiple) { const newGroup = { type:'group', id:old.id, name:old.name, requiredCredits:old.credits, enableMultiple:true, children:[] }; m.items.splice(idx,1,newGroup); this.saveToLocal(); } },
+        toggleGroupToCourse(moduleId, groupId) { const m = this.modules.find(m => m.id === moduleId); if (!m) return; const idx = m.items.findIndex(i => i.id === groupId); if(idx===-1) return; const group = m.items[idx]; if(!group.enableMultiple && confirm('关闭多条目会丢失子课程，确定吗？')) { const newCourse = { type:'course', id:group.id, name:group.name, credits:group.requiredCredits||0, completed:false, note:'', semester:'', enableMultiple:false }; m.items.splice(idx,1,newCourse); this.saveToLocal(); } else if(!group.enableMultiple) { group.enableMultiple = true; this.saveToLocal(); } },
+        addPlainCourse(moduleId) { const m = this.modules.find(m => m.id === moduleId); if(!m) return; const name = this.newCourseName[moduleId]?.trim(); if(!name) { alert('请输入课程名称'); return; } let cred = parseFloat(this.newCourseCredit[moduleId]); if(isNaN(cred)) cred = 2; const sem = this.newCourseSemester[moduleId]?.trim() || ''; m.items.push({ type:'course', id:Date.now()+'_'+Math.random(), name, credits:cred, completed:false, note:'', semester:sem, enableMultiple:false }); this.newCourseName[moduleId] = ''; this.newCourseCredit[moduleId] = null; this.newCourseSemester[moduleId] = ''; this.saveToLocal(); },
+        addChildToGroup(moduleId, groupId) { const m = this.modules.find(m => m.id === moduleId); if(!m) return; const group = m.items.find(i => i.id === groupId); if(!group) return; const name = this.newChildName[groupId]?.trim(); if(!name) { alert('请输入子课程名称'); return; } let cred = parseFloat(this.newChildCredit[groupId]); if(isNaN(cred)) cred = 1; const sem = this.newChildSemester[groupId]?.trim() || ''; if (!group.children) group.children = []; group.children.push({ id:Date.now()+'_'+Math.random(), name, credits:cred, completed:false, note:'', semester:sem }); this.newChildName[groupId] = ''; this.newChildCredit[groupId] = null; this.newChildSemester[groupId] = ''; this.saveToLocal(); },
+        deleteItem(moduleId, itemId) { const m = this.modules.find(m => m.id === moduleId); if(m) m.items = m.items.filter(i => i.id !== itemId); this.saveToLocal(); },
+        deleteChildFromGroup(moduleId, groupId, childId) { const m = this.modules.find(m => m.id === moduleId); if(!m) return; const group = m.items.find(i => i.id === groupId); if(group && group.children) group.children = group.children.filter(c => c.id !== childId); this.saveToLocal(); },
+        saveToLocal() { localStorage.setItem('AIScheduleTrackerGroup', JSON.stringify({ modules: this.modules, version: '3.2' })); },
+        saveAsDefault() { localStorage.setItem('AIScheduleDefaultTemplate', JSON.stringify(this.modules)); alert('当前课程结构已保存为默认模板'); },
+        resetAllData() { const tmpl = localStorage.getItem('AIScheduleDefaultTemplate'); if(tmpl) { if(confirm('重置到您保存的默认模板吗？')) { try { let t = JSON.parse(tmpl); t = normalizeModules(t); this.modules = t; this.saveToLocal(); } catch(e) { this.resetToFactory(); } } } else { if(confirm('没有自定义默认模板，将恢复出厂设置？')) this.resetToFactory(); } },
+        resetToFactory() { localStorage.removeItem('AIScheduleDefaultTemplate'); let factory = buildFactoryModules(); factory = normalizeModules(factory); this.modules = factory; this.saveToLocal(); alert('已恢复基于官方培养方案（立本51学分）的初始配置。'); },
+        loadFromLocal() { const raw = localStorage.getItem('AIScheduleTrackerGroup'); if(raw) { try { const saved = JSON.parse(raw); if(saved.modules && saved.modules.length) { this.modules = saved.modules; return; } } catch(e) {} } let def = buildFactoryModules(); def = normalizeModules(def); this.modules = def; this.modules.forEach(m => { if(this.openedModules[m.id] === undefined) this.openedModules[m.id] = true; }); },
+        exportData() { const dataStr = JSON.stringify({ modules: this.modules, exportTime: new Date().toISOString() }, null, 2); const blob = new Blob([dataStr], {type: 'application/json'}); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `ai_progress_${new Date().toISOString().slice(0,19)}.json`; a.click(); URL.revokeObjectURL(url); },
         triggerImport() { document.getElementById('importFile').click(); },
-        importData(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = e => {
-                try {
-                    const imported = JSON.parse(e.target.result);
-                    if (imported.modules && Array.isArray(imported.modules)) {
-                        imported.modules.forEach(module => {
-                            module.items.forEach(item => {
-                                if (item.type === 'group' && item.enableMultiple === undefined) item.enableMultiple = true;
-                                if (item.type === 'course' && item.enableMultiple === undefined) item.enableMultiple = false;
-                            });
-                        });
-                        this.modules = imported.modules;
-                        this.saveToLocal();
-                        alert('导入成功！');
-                    } else alert('文件格式错误');
-                } catch(err) { alert('解析失败'); }
-                event.target.value = '';
-            };
-            reader.readAsText(file);
-        }
+        importData(event) { const file = event.target.files[0]; if(!file) return; const reader = new FileReader(); reader.onload = e => { try { const imported = JSON.parse(e.target.result); if(imported.modules && Array.isArray(imported.modules)) { this.modules = imported.modules; this.saveToLocal(); alert('导入成功！'); } else alert('文件格式错误'); } catch(err) { alert('解析失败'); } event.target.value = ''; }; reader.readAsText(file); }
     }
 });
 </script>
