@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>人大高瓴AI学院 · 学习进度追踪器 | 支持自定义默认模板</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #f0f2f5;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            padding: 2rem 1.5rem;
+            color: #1e293b;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: flex-end;
+            gap: 1rem;
+        }
+        .title-section h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            letter-spacing: -0.3px;
+        }
+        .title-section p {
+            color: #475569;
+            margin-top: 0.3rem;
+            font-size: 0.9rem;
+        }
+        .stats-card {
+            background: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 2rem;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+        .stat {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .stat-number {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #0f3b6f;
+        }
+        .stat-label {
+            font-size: 0.75rem;
+            color: #5b6e8c;
+            font-weight: 500;
+        }
+        .progress-bar-big {
+            width: 200px;
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 0.5rem;
+        }
+        .progress-fill {
+            height: 100%;
+            background: #2c6e9e;
+            border-radius: 10px;
+            width: 0%;
+            transition: width 0.2s;
+        }
+
+        .action-bar {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.8rem;
+            gap: 0.8rem;
+        }
+        .btn-group {
+            display: flex;
+            gap: 0.7rem;
+            flex-wrap: wrap;
+        }
+        button {
+            background: white;
+            border: 1px solid #cbd5e1;
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #1e293b;
+        }
+        button.primary {
+            background: #1e4a76;
+            border-color: #1e4a76;
+            color: white;
+        }
+        button.primary:hover {
+            background: #0f3a5c;
+        }
+        button:hover {
+            background: #f1f5f9;
+            transform: translateY(-1px);
+        }
+        .search-box {
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            border: 1px solid #cbd5e1;
+            width: 240px;
+            font-size: 0.85rem;
+        }
+
+        .module {
+            background: white;
+            border-radius: 1.2rem;
+            margin-bottom: 1.8rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            overflow: hidden;
+            transition: all 0.1s;
+        }
+        .module-header {
+            background: #f8fafc;
+            padding: 1rem 1.5rem;
+            border-bottom: 2px solid #e2edf7;
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            cursor: pointer;
+            user-select: none;
+        }
+        .module-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+        }
+        .module-badge {
+            background: #d9eafb;
+            color: #1e4a76;
+            border-radius: 40px;
+            font-size: 0.7rem;
+            padding: 0.2rem 0.7rem;
+            font-weight: 500;
+        }
+        .module-stats {
+            font-size: 0.8rem;
+            color: #2c5a7a;
+            background: #eef4ff;
+            padding: 0.2rem 0.8rem;
+            border-radius: 20px;
+        }
+        .module-content {
+            padding: 0.5rem 0;
+        }
+
+        .course-item {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 0.8rem 1.5rem;
+            border-bottom: 1px solid #edf2f7;
+            transition: background 0.1s;
+        }
+        .course-item:hover {
+            background: #fafcff;
+        }
+        .check-col {
+            flex-shrink: 0;
+        }
+        .check-col input {
+            width: 1.2rem;
+            height: 1.2rem;
+            cursor: pointer;
+            accent-color: #1e4a76;
+        }
+        .course-name {
+            flex: 2;
+            min-width: 180px;
+            font-weight: 500;
+            font-size: 0.92rem;
+            word-break: break-word;
+        }
+        .semester-col {
+            flex: 1;
+            min-width: 100px;
+        }
+        .semester-input {
+            width: 100%;
+            padding: 0.4rem 0.7rem;
+            border-radius: 20px;
+            border: 1px solid #e2e8f0;
+            font-size: 0.8rem;
+            background: #ffffff;
+            transition: 0.1s;
+        }
+        .credit-col {
+            flex: 0 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 0.2rem;
+            flex-wrap: nowrap;
+            white-space: nowrap;
+        }
+        .credit-input {
+            width: 60px;
+            padding: 0.3rem 0.4rem;
+            border-radius: 12px;
+            border: 1px solid #cbd5e1;
+            text-align: center;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        .credit-label {
+            font-size: 0.7rem;
+            color: #4b6b8f;
+            flex-shrink: 0;
+        }
+        .note-col {
+            flex: 2;
+            min-width: 160px;
+        }
+        .note-input {
+            width: 100%;
+            padding: 0.4rem 0.7rem;
+            border-radius: 20px;
+            border: 1px solid #e2e8f0;
+            font-size: 0.8rem;
+            background: #ffffff;
+            transition: 0.1s;
+        }
+        .del-btn {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: #94a3b8;
+            padding: 0 0.2rem;
+        }
+        .del-btn:hover {
+            color: #e53e3e;
+        }
+
+        .group-wrapper {
+            margin: 0.5rem 0;
+        }
+        .group-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            padding: 0.8rem 1.5rem 0.4rem 1.5rem;
+            background: #fefcf5;
+            border-bottom: 1px dashed #dce5f0;
+        }
+        .group-title {
+            font-weight: 600;
+            font-size: 1rem;
+            color: #1f3a5f;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            flex-wrap: wrap;
+        }
+        .group-progress {
+            font-size: 0.75rem;
+            background: #e9ecef;
+            padding: 0.2rem 0.7rem;
+            border-radius: 30px;
+            color: #2c5a7a;
+        }
+        .group-status {
+            font-size: 0.75rem;
+            background: #e0f2e9;
+            color: #2c7a4d;
+            padding: 0.2rem 0.7rem;
+            border-radius: 30px;
+        }
+        .group-multiple-switch {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.75rem;
+            background: #f1f5f9;
+            padding: 0.2rem 0.7rem;
+            border-radius: 30px;
+            cursor: pointer;
+        }
+        .sub-course {
+            padding-left: 2.8rem !important;
+            background: #fdfdf9;
+        }
+        .add-item {
+            margin: 1rem 1.5rem;
+            display: flex;
+            gap: 0.6rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .add-item input {
+            padding: 0.4rem 0.8rem;
+            border-radius: 2rem;
+            border: 1px solid #cbd5e1;
+            font-size: 0.8rem;
+        }
+        .small-btn {
+            background: #eef2ff;
+            padding: 0.3rem 1rem;
+            font-size: 0.75rem;
+        }
+        footer {
+            text-align: center;
+            margin-top: 2rem;
+            font-size: 0.75rem;
+            color: #6c86a3;
+        }
+        @media (max-width: 780px) {
+            body { padding: 1rem; }
+            .course-item { flex-direction: column; align-items: stretch; }
+            .credit-col, .note-col, .semester-col { width: 100%; }
+            .sub-course { padding-left: 1rem !important; }
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
+</head>
+<body>
+<div id="app">
+    <div class="container">
+        <div class="header">
+            <div class="title-section">
+                <h1>📚 高瓴人工智能学院 · 学业进度管家</h1>
+                <p>2025级人工智能专业培养方案 | 支持保存当前状态为默认模板，重置时可恢复到自定义初始配置</p>
+            </div>
+            <div class="stats-card">
+                <div class="stat"><div class="stat-number">{{ totalEarnedCredits }}</div><div class="stat-label">已获学分</div></div>
+                <div class="stat"><div class="stat-number">{{ totalRequiredCredits }}</div><div class="stat-label">方案总学分</div></div>
+                <div class="stat">
+                    <div class="stat-number">{{ completionPercent }}%</div><div class="stat-label">完成进度</div>
+                    <div class="progress-bar-big"><div class="progress-fill" :style="{width: completionPercent+'%'}"></div></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="action-bar">
+            <div class="btn-group">
+                <button @click="resetAllData" class="primary">🗑️ 重置到默认模板</button>
+                <button @click="saveAsDefault">💾 保存当前为默认模板</button>
+                <button @click="resetToFactory">🏭 恢复出厂设置</button>
+                <button @click="exportData">📤 导出备份</button>
+                <input type="file" id="importFile" style="display:none" @change="importData" accept=".json"/>
+                <button @click="triggerImport">📥 导入备份</button>
+            </div>
+            <input type="text" placeholder="🔍 搜索课程名称或备注..." class="search-box" v-model="searchKeyword">
+        </div>
+
+        <div v-for="module in filteredModules" :key="module.id" class="module">
+            <div class="module-header" @click="toggleModule(module.id)">
+                <div class="module-title"><span>{{ module.icon || '📖' }} {{ module.name }}</span><span class="module-badge">{{ getModuleItemCount(module.id) }}项</span></div>
+                <div class="module-stats">🧮 {{ getModuleEarned(module.id) }} / {{ getModuleFixedTotal(module.id) }} 学分</div>
+            </div>
+            <div class="module-content" v-show="openedModules[module.id] !== false">
+                <template v-for="item in module.items">
+                    <div v-if="item.type === 'course' && !item.enableMultiple" :key="item.id" class="course-item">
+                        <div class="check-col"><input type="checkbox" v-model="item.completed" @change="saveToLocal"></div>
+                        <div class="course-name" :style="item.completed ? {textDecoration: 'line-through', color: '#6f8fae'} : {}">{{ item.name }}</div>
+                        <div class="semester-col"><input type="text" class="semester-input" placeholder="建议学期" v-model="item.semester" @input="saveToLocal"></div>
+                        <div class="credit-col"><input type="number" step="0.5" v-model.number="item.credits" class="credit-input" @change="saveToLocal"><span class="credit-label">学分</span></div>
+                        <div class="note-col"><input type="text" class="note-input" placeholder="批注 / 成绩" v-model="item.note" @input="saveToLocal"></div>
+                        <label class="group-multiple-switch" style="background:#eef2ff;" @click.stop>
+                            <input type="checkbox" v-model="item.enableMultiple" @change="toggleCourseToGroup(module.id, item.id)"> ✚ 多条目模式
+                        </label>
+                        <button class="del-btn" @click="deleteItem(module.id, item.id)">✖️</button>
+                    </div>
+
+                    <div v-else-if="item.type === 'group' || (item.type === 'course' && item.enableMultiple)" :key="item.id" class="group-wrapper">
+                        <div class="group-header">
+                            <div class="group-title">
+                                <span>📌 {{ item.name }}</span>
+                                <span class="group-progress">{{ getGroupCompletedCredits(item) }} / {{ item.requiredCredits }} 学分</span>
+                                <label class="group-multiple-switch" @click.stop>
+                                    <input type="checkbox" v-model="item.enableMultiple" @change="toggleGroupToCourse(module.id, item.id)"> ✚ 多条目模式（关闭则还原为普通课程）
+                                </label>
+                            </div>
+                            <div v-if="getGroupCompletedCredits(item) >= item.requiredCredits" class="group-status">✅ 要求已满足</div>
+                            <div v-else class="group-status" style="background:#f0e6d2; color:#8a6e3d;">⏳ 还需 {{ (item.requiredCredits - getGroupCompletedCredits(item)).toFixed(1) }} 学分</div>
+                        </div>
+                        <div v-for="child in item.children" :key="child.id" class="course-item sub-course">
+                            <div class="check-col"><input type="checkbox" v-model="child.completed" @change="saveToLocal"></div>
+                            <div class="course-name" :style="child.completed ? {textDecoration: 'line-through', color: '#6f8fae'} : {}">{{ child.name }}</div>
+                            <div class="semester-col"><input type="text" class="semester-input" placeholder="建议学期" v-model="child.semester" @input="saveToLocal"></div>
+                            <div class="credit-col"><input type="number" step="0.5" v-model.number="child.credits" class="credit-input" @change="saveToLocal"><span class="credit-label">学分</span></div>
+                            <div class="note-col"><input type="text" class="note-input" placeholder="批注" v-model="child.note" @input="saveToLocal"></div>
+                            <button class="del-btn" @click="deleteChildFromGroup(module.id, item.id, child.id)">✖️</button>
+                        </div>
+                        <div class="add-item" style="margin:0.5rem 1.5rem 1rem 3rem;">
+                            <input type="text" placeholder="新子课程名称" v-model="newChildName[item.id]" style="flex:2">
+                            <input type="text" placeholder="学期" v-model="newChildSemester[item.id]" style="width:80px">
+                            <input type="number" step="0.5" placeholder="学分" v-model.number="newChildCredit[item.id]" style="width:80px">
+                            <button class="small-btn" @click="addChildToGroup(module.id, item.id)">➕ 添加子课程</button>
+                        </div>
+                    </div>
+                </template>
+
+                <div class="add-item">
+                    <input type="text" placeholder="新课程名称" v-model="newCourseName[module.id]" style="flex:2">
+                    <input type="text" placeholder="学期" v-model="newCourseSemester[module.id]" style="width:90px">
+                    <input type="number" step="0.5" placeholder="学分" v-model.number="newCourseCredit[module.id]" style="width:80px">
+                    <button class="small-btn" @click="addPlainCourse(module.id)">➕ 添加课程</button>
+                </div>
+            </div>
+        </div>
+        <footer>✔️ “保存当前为默认模板”可将您修改后的课程结构设为新的初始状态；“重置到默认模板”会加载您保存的模板（若有），否则恢复出厂设置；“恢复出厂设置”会清空自定义模板，还原到最初培养方案。</footer>
+    </div>
+</div>
+
+<script>
+// 原始出厂配置（与之前完全一致）
+function buildFactoryModules() {
+    return [
+        { id: 'liben_module', name: '一、立本模块（47学分）', icon: '🌱', items: [
+            { type: 'course', id: 'marx', name: '马克思主义基本原理', credits: 3, completed: false, note: '', semester: '大一/大二', enableMultiple: false },
+            { type: 'course', id: 'mao', name: '毛泽东思想和中国特色社会主义理论体系概论', credits: 5, completed: false, note: '', semester: '大二', enableMultiple: false },
+            { type: 'course', id: 'modern', name: '中国近现代史纲要', credits: 3, completed: false, note: '', semester: '大一', enableMultiple: false },
+            { type: 'course', id: 'moral', name: '思想道德与法治', credits: 3, completed: false, note: '', semester: '大一', enableMultiple: false },
+            { type: 'course', id: 'xi', name: '习近平新时代中国特色社会主义思想概论', credits: 3, completed: false, note: '', semester: '大二', enableMultiple: false },
+            { type: 'course', id: 'policy', name: '形势与政策', credits: 2, completed: false, note: '', semester: '贯穿学期', enableMultiple: false },
+            { type: 'course', id: 'ide_elec', name: '思政选修模块 (任选1门)', credits: 2, completed: false, note: '四史/宪法等', semester: '大二/大三', enableMultiple: false },
+            { type: 'course', id: 'foreign', name: '公共外语课 (分级认定)', credits: 2, completed: false, note: 'II/III/IV级6学分，可自行调整', semester: '大一/大二', enableMultiple: false },
+            { type: 'course', id: 'fresh_guide', name: '新生引导课', credits: 2, completed: false, note: '', semester: '大一上', enableMultiple: false },
+            { type: 'group', id: 'science_group', name: '科学与人文素养课 (需选修6学分)', requiredCredits: 6, enableMultiple: true,
+              children: [
+                  { id: 'sci1', name: '科学技术史', credits: 2, completed: false, note: '', semester: '大一/大二' },
+                  { id: 'art1', name: '艺术导论', credits: 2, completed: false, note: '', semester: '大一/大二' },
+                  { id: 'logic1', name: '逻辑与批判性思维', credits: 2, completed: false, note: '', semester: '大二' },
+                  { id: 'env1', name: '环境与可持续发展', credits: 2, completed: false, note: '', semester: '大二' },
+                  { id: 'philo1', name: '哲学入门', credits: 2, completed: false, note: '', semester: '大一/大二' },
+                  { id: 'soc1', name: '社会学概论', credits: 2, completed: false, note: '', semester: '大二' }
+              ] },
+            { type: 'course', id: 'pe_core', name: '公共体育课-核心基础 (游泳/太极拳等2门)', credits: 2, completed: false, note: '大一大二必修', semester: '大一/大二', enableMultiple: false },
+            { type: 'course', id: 'pe_special', name: '公共体育课-专项基础课', credits: 2, completed: false, note: '大一大二选修', semester: '大一/大二', enableMultiple: false },
+            { type: 'course', id: 'aesthetic', name: '美育课程', credits: 2, completed: false, note: '', semester: '大一/大二', enableMultiple: false },
+            { type: 'course', id: 'labor', name: '劳动教育 (理论与实践)', credits: 1, completed: false, note: '', semester: '大一至大三', enableMultiple: false },
+            { type: 'course', id: 'mental', name: '心理健康教育', credits: 2, completed: false, note: '', semester: '大一', enableMultiple: false },
+            { type: 'course', id: 'career', name: '职业生涯教育', credits: 1, completed: false, note: '', semester: '大二/大三', enableMultiple: false },
+            { type: 'course', id: 'military', name: '军事课 (军事理论+技能)', credits: 4, completed: false, note: '', semester: '大一', enableMultiple: false },
+            { type: 'course', id: 'volunteer', name: '志愿服务 (≥24小时+8次)', credits: 2, completed: false, note: '', semester: '灵活安排', enableMultiple: false }
+        ] },
+        { id: 'major_module', name: '二、专业模块（82学分）', icon: '⚙️', items: [
+            { type: 'course', id: 'calc1', name: '高等数学I (B级)', credits: 5, completed: false, note: '', semester: '大一上', enableMultiple: false },
+            { type: 'course', id: 'calc2', name: '高等数学II (B级)', credits: 5, completed: false, note: '', semester: '大一下', enableMultiple: false },
+            { type: 'course', id: 'alg1', name: '高等代数I (计算机类 A级)', credits: 4, completed: false, note: '', semester: '大一上', enableMultiple: false },
+            { type: 'course', id: 'alg2', name: '高等代数II (计算机类 A级)', credits: 4, completed: false, note: '', semester: '大一下', enableMultiple: false },
+            { type: 'course', id: 'phys', name: '普通物理B', credits: 4, completed: false, note: '', semester: '大二', enableMultiple: false },
+            { type: 'course', id: 'prog', name: '程序设计', credits: 4, completed: false, note: '部类基础课', semester: '大一', enableMultiple: false },
+            { type: 'course', id: 'ai_py', name: '人工智能与Python程序设计', credits: 4, completed: false, note: '部类基础课', semester: '大二上', enableMultiple: false },
+            { type: 'course', id: 'ml', name: '机器学习基础 (荣誉课可替换)', credits: 3, completed: false, note: '', semester: '大二下', enableMultiple: false },
+            { type: 'course', id: 'opt', name: '最优化理论与方法', credits: 3, completed: false, note: '', semester: '大二下/大三上', enableMultiple: false },
+            { type: 'course', id: 'dl', name: '深度学习', credits: 3, completed: false, note: '', semester: '大三上', enableMultiple: false },
+            { type: 'course', id: 'nlp', name: '自然语言处理', credits: 3, completed: false, note: '', semester: '大三', enableMultiple: false },
+            { type: 'course', id: 'cv', name: '计算机视觉', credits: 3, completed: false, note: '', semester: '大三', enableMultiple: false },
+            { type: 'course', id: 'datastruct', name: '数据结构与算法', credits: 4, completed: false, note: '', semester: '大二', enableMultiple: false },
+            { type: 'course', id: 'db', name: '数据库系统概论', credits: 3, completed: false, note: '', semester: '大二下', enableMultiple: false },
+            { type: 'course', id: 'os', name: '操作系统', credits: 3, completed: false, note: '', semester: '大三', enableMultiple: false },
+            { type: 'course', id: 'compnet', name: '计算机网络', credits: 3, completed: false, note: '', semester: '大三', enableMultiple: false },
+            { type: 'course', id: 'prob', name: '概率论与数理统计', credits: 3, completed: false, note: '', semester: '大二', enableMultiple: false },
+            { type: 'course', id: 'discrete', name: '离散数学', credits: 4, completed: false, note: '', semester: '大二', enableMultiple: false },
+            { type: 'course', id: 'ml_adv', name: '高级机器学习', credits: 3, completed: false, note: '', semester: '大三下', enableMultiple: false },
+            { type: 'group', id: 'limit_group', name: '① 模块限选课 (至少选修8学分，其中AI核心领域≥1门)', requiredCredits: 8, enableMultiple: true,
+              children: [
+                  { id: 'limit_ds', name: '分布式机器学习', credits: 2, completed: false, note: '', semester: '大三' },
+                  { id: 'limit_robot', name: '智能机器人', credits: 2, completed: false, note: '', semester: '大三' },
+                  { id: 'limit_kg', name: '知识工程', credits: 2, completed: false, note: '', semester: '大三' },
+                  { id: 'limit_cv', name: '计算机视觉进阶', credits: 3, completed: false, note: '', semester: '大三/大四' },
+                  { id: 'limit_nlp', name: '自然语言处理进阶', credits: 3, completed: false, note: '', semester: '大三/大四' },
+                  { id: 'limit_rl', name: '强化学习', credits: 2, completed: false, note: '', semester: '大三' }
+              ] },
+            { type: 'course', id: 'indiv1', name: '② 个性化任选课 (AI类/跨学科，需修满6学分)', credits: 3, completed: false, note: '可拆分多个', semester: '大二至大四', enableMultiple: false },
+            { type: 'course', id: 'indiv2', name: '个性化任选课 (科研认定学分)', credits: 3, completed: false, note: '可用科研训练成果认定I/II', semester: '灵活安排', enableMultiple: false }
+        ] },
+        { id: 'excellence_module', name: '三、卓越模块（18学分）', icon: '🏅', items: [
+            { type: 'course', id: 'research_train', name: '研究训练 (“求是学术”/校级创研课)', credits: 2, completed: false, note: '', semester: '大二至大四', enableMultiple: false },
+            { type: 'group', id: 'sci_training_group', name: '专业特色创新训练 - 科研训练三模块 (完成可得2学分)', requiredCredits: 2, enableMultiple: true,
+              children: [
+                  { id: 'sci_lec', name: '科研主题讲座 (8场)', credits: 0.7, completed: false, note: '每场2学时', semester: '大二/大三' },
+                  { id: 'sci_prog', name: '科研进展报告 (4次)', credits: 0.7, completed: false, note: '', semester: '大二/大三' },
+                  { id: 'sci_ach', name: '科研成果汇报 (含AI创研项目)', credits: 0.6, completed: false, note: '可被院级AI+创研替代', semester: '大三' }
+              ] },
+            { type: 'course', id: 'coding_boot', name: '专业特色创新训练 - 编程集训 + 《人工智能综合设计》', credits: 2, completed: false, note: '大一暑期完成考核', semester: '大一暑期', enableMultiple: false },
+            { type: 'course', id: 'intern', name: '专业实习 (3000字报告)', credits: 4, completed: false, note: '第七至八学期', semester: '大四', enableMultiple: false },
+            { type: 'course', id: 'thesis', name: '毕业论文 (设计) 15000字', credits: 4, completed: false, note: '', semester: '大四', enableMultiple: false },
+            { type: 'course', id: 'international', name: '国际性学习课程 (选修2学分)', credits: 2, completed: false, note: '国际暑期学校等', semester: '大二/大三', enableMultiple: false },
+            { type: 'course', id: 'public_elec', name: '公共选修课 (任意2学分)', credits: 2, completed: false, note: '', semester: '灵活安排', enableMultiple: false }
+        ] }
+    ];
+}
+
+function normalizeModules(modules) {
+    modules.forEach(module => {
+        if (!module.id) module.id = `mod_${Date.now()}_${Math.random()}`;
+        module.items.forEach(item => {
+            if (!item.id) item.id = `it_${Date.now()}_${Math.random()}`;
+            if (item.type === 'group') {
+                if (item.requiredCredits === undefined) item.requiredCredits = 0;
+                if (item.enableMultiple === undefined) item.enableMultiple = true;
+                item.children.forEach(child => {
+                    if (!child.id) child.id = `ch_${Date.now()}_${Math.random()}`;
+                    if (child.credits === undefined) child.credits = 0;
+                    if (child.completed === undefined) child.completed = false;
+                    if (child.note === undefined) child.note = '';
+                    if (child.semester === undefined) child.semester = '';
+                });
+            } else if (item.type === 'course') {
+                if (item.credits === undefined) item.credits = 0;
+                if (item.completed === undefined) item.completed = false;
+                if (item.note === undefined) item.note = '';
+                if (item.semester === undefined) item.semester = '';
+                if (item.enableMultiple === undefined) item.enableMultiple = false;
+            }
+        });
+    });
+    return modules;
+}
+
+new Vue({
+    el: '#app',
+    data: {
+        modules: [],
+        searchKeyword: '',
+        openedModules: {},
+        newCourseName: {},
+        newCourseCredit: {},
+        newCourseSemester: {},
+        newChildName: {},
+        newChildCredit: {},
+        newChildSemester: {},
+        fixedTotalCredits: 147,
+        moduleFixedTotals: {
+            liben_module: 47,
+            major_module: 82,
+            excellence_module: 18
+        }
+    },
+    computed: {
+        totalRequiredCredits() { return this.fixedTotalCredits; },
+        totalEarnedCredits() {
+            let earned = 0;
+            this.modules.forEach(module => {
+                module.items.forEach(item => {
+                    if (item.type === 'course' && !item.enableMultiple && item.completed) {
+                        earned += parseFloat(item.credits || 0);
+                    }
+                    else if (item.type === 'group' || (item.type === 'course' && item.enableMultiple)) {
+                        let groupEarned = 0;
+                        item.children.forEach(child => { if (child.completed) groupEarned += parseFloat(child.credits || 0); });
+                        earned += Math.min(groupEarned, item.requiredCredits);
+                    }
+                });
+            });
+            return earned.toFixed(1);
+        },
+        completionPercent() {
+            let total = parseFloat(this.totalRequiredCredits);
+            if (total === 0) return 0;
+            return Math.min(100, Math.floor((parseFloat(this.totalEarnedCredits) / total) * 100));
+        },
+        filteredModules() {
+            if (!this.searchKeyword.trim()) return this.modules;
+            const kw = this.searchKeyword.trim().toLowerCase();
+            return this.modules.map(module => {
+                const filteredItems = module.items.filter(item => {
+                    if (item.type === 'course' && !item.enableMultiple) return item.name.toLowerCase().includes(kw) || (item.note || '').toLowerCase().includes(kw);
+                    if (item.type === 'group' || (item.type === 'course' && item.enableMultiple)) {
+                        const matchGroup = item.name.toLowerCase().includes(kw);
+                        const matchChild = item.children.some(c => c.name.toLowerCase().includes(kw) || (c.note || '').toLowerCase().includes(kw));
+                        return matchGroup || matchChild;
+                    }
+                    return false;
+                }).map(item => {
+                    if ((item.type === 'group' || (item.type === 'course' && item.enableMultiple)) && !item.name.toLowerCase().includes(kw)) {
+                        return { ...item, children: item.children.filter(c => c.name.toLowerCase().includes(kw) || (c.note || '').toLowerCase().includes(kw)) };
+                    }
+                    return item;
+                });
+                return { ...module, items: filteredItems };
+            }).filter(m => m.items.length);
+        }
+    },
+    watch: { modules: { deep: true, handler() { this.saveToLocal(); } } },
+    mounted() { this.loadFromLocal(); },
+    methods: {
+        toggleModule(id) { this.openedModules[id] = !this.openedModules[id]; },
+        getGroupCompletedCredits(group) {
+            let sum = 0;
+            group.children.forEach(c => { if (c.completed) sum += parseFloat(c.credits || 0); });
+            return Math.min(sum, group.requiredCredits).toFixed(1);
+        },
+        getModuleFixedTotal(moduleId) { return this.moduleFixedTotals[moduleId] || 0; },
+        getModuleEarned(moduleId) {
+            let earned = 0;
+            const mod = this.modules.find(m => m.id === moduleId);
+            if (!mod) return 0;
+            mod.items.forEach(item => {
+                if (item.type === 'course' && !item.enableMultiple && item.completed) earned += parseFloat(item.credits);
+                else if (item.type === 'group' || (item.type === 'course' && item.enableMultiple)) {
+                    let groupEarned = 0;
+                    item.children.forEach(c => { if (c.completed) groupEarned += parseFloat(c.credits); });
+                    earned += Math.min(groupEarned, item.requiredCredits);
+                }
+            });
+            return earned.toFixed(1);
+        },
+        getModuleItemCount(moduleId) {
+            const mod = this.modules.find(m => m.id === moduleId);
+            if (!mod) return 0;
+            let count = 0;
+            mod.items.forEach(item => {
+                if (item.type === 'course' && !item.enableMultiple) count += 1;
+                else if (item.type === 'group' || (item.type === 'course' && item.enableMultiple)) count += 1;
+            });
+            return count;
+        },
+        toggleCourseToGroup(moduleId, itemId) {
+            const module = this.modules.find(m => m.id === moduleId);
+            if (!module) return;
+            const item = module.items.find(i => i.id === itemId);
+            if (!item || item.type !== 'course') return;
+            if (item.enableMultiple) {
+                const newGroup = {
+                    type: 'group',
+                    id: item.id,
+                    name: item.name,
+                    requiredCredits: item.credits,
+                    enableMultiple: true,
+                    children: [],
+                };
+                const index = module.items.findIndex(i => i.id === itemId);
+                module.items.splice(index, 1, newGroup);
+                this.saveToLocal();
+            }
+        },
+        toggleGroupToCourse(moduleId, groupId) {
+            const module = this.modules.find(m => m.id === moduleId);
+            if (!module) return;
+            const group = module.items.find(i => i.id === groupId);
+            if (!group || (group.type !== 'group' && !(group.type === 'course' && group.enableMultiple))) return;
+            if (!group.enableMultiple) {
+                if (group.children && group.children.length > 0) {
+                    if (!confirm('该课程组已有子课程，关闭多条目模式将会丢失所有子课程及其进度，确定要还原为普通课程吗？')) {
+                        group.enableMultiple = true;
+                        this.saveToLocal();
+                        return;
+                    }
+                }
+                const newCourse = {
+                    type: 'course',
+                    id: group.id,
+                    name: group.name,
+                    credits: group.requiredCredits || 0,
+                    completed: false,
+                    note: '',
+                    semester: '',
+                    enableMultiple: false
+                };
+                const index = module.items.findIndex(i => i.id === groupId);
+                module.items.splice(index, 1, newCourse);
+                this.saveToLocal();
+            }
+        },
+        addPlainCourse(moduleId) {
+            const module = this.modules.find(m => m.id === moduleId);
+            if (!module) return;
+            const name = this.newCourseName[moduleId]?.trim();
+            if (!name) { alert('请输入课程名称'); return; }
+            let cred = parseFloat(this.newCourseCredit[moduleId]);
+            if (isNaN(cred)) cred = 2;
+            const sem = this.newCourseSemester[moduleId]?.trim() || '';
+            module.items.push({ type: 'course', id: Date.now() + '_' + Math.random(), name, credits: cred, completed: false, note: '', semester: sem, enableMultiple: false });
+            this.newCourseName[moduleId] = '';
+            this.newCourseCredit[moduleId] = null;
+            this.newCourseSemester[moduleId] = '';
+            this.saveToLocal();
+        },
+        addChildToGroup(moduleId, groupId) {
+            const module = this.modules.find(m => m.id === moduleId);
+            if (!module) return;
+            const group = module.items.find(i => i.id === groupId);
+            if (!group) return;
+            const name = this.newChildName[groupId]?.trim();
+            if (!name) { alert('请输入子课程名称'); return; }
+            let cred = parseFloat(this.newChildCredit[groupId]);
+            if (isNaN(cred)) cred = 1;
+            const sem = this.newChildSemester[groupId]?.trim() || '';
+            if (!group.children) group.children = [];
+            group.children.push({ id: Date.now() + '_' + Math.random(), name, credits: cred, completed: false, note: '', semester: sem });
+            this.newChildName[groupId] = '';
+            this.newChildCredit[groupId] = null;
+            this.newChildSemester[groupId] = '';
+            this.saveToLocal();
+        },
+        deleteItem(moduleId, itemId) {
+            const module = this.modules.find(m => m.id === moduleId);
+            if (module) module.items = module.items.filter(i => i.id !== itemId);
+            this.saveToLocal();
+        },
+        deleteChildFromGroup(moduleId, groupId, childId) {
+            const module = this.modules.find(m => m.id === moduleId);
+            if (!module) return;
+            const group = module.items.find(i => i.id === groupId);
+            if (group && group.children) group.children = group.children.filter(c => c.id !== childId);
+            this.saveToLocal();
+        },
+        saveToLocal() {
+            localStorage.setItem('AIScheduleTrackerGroup', JSON.stringify({ modules: this.modules, version: '3.2' }));
+        },
+        // 保存当前状态为默认模板
+        saveAsDefault() {
+            const defaultTemplate = JSON.parse(JSON.stringify(this.modules));
+            localStorage.setItem('AIScheduleDefaultTemplate', JSON.stringify(defaultTemplate));
+            alert('当前课程结构已保存为默认模板，下次点击“重置到默认模板”时将恢复此状态。');
+        },
+        // 重置到用户保存的默认模板（如果存在），否则恢复到出厂设置
+        resetAllData() {
+            const defaultTemplateRaw = localStorage.getItem('AIScheduleDefaultTemplate');
+            if (defaultTemplateRaw) {
+                if (confirm('重置将清除所有勾选、备注和临时修改，恢复到您保存的默认模板。确定吗？')) {
+                    try {
+                        let template = JSON.parse(defaultTemplateRaw);
+                        template = normalizeModules(template);
+                        this.modules = template;
+                        this.newCourseName = {}; this.newCourseCredit = {}; this.newCourseSemester = {};
+                        this.newChildName = {}; this.newChildCredit = {}; this.newChildSemester = {};
+                        this.saveToLocal();
+                    } catch(e) { alert('默认模板读取失败，将恢复出厂设置'); this.resetToFactory(); }
+                }
+            } else {
+                if (confirm('尚未保存自定义默认模板，将恢复出厂设置。确定吗？')) {
+                    this.resetToFactory();
+                }
+            }
+        },
+        // 恢复出厂设置（清空自定义模板，回到最初培养方案）
+        resetToFactory() {
+            if (confirm('恢复出厂设置将清除您保存的默认模板，并恢复到最初的培养方案。确定吗？')) {
+                localStorage.removeItem('AIScheduleDefaultTemplate');
+                let factoryModules = buildFactoryModules();
+                factoryModules = normalizeModules(factoryModules);
+                this.modules = factoryModules;
+                this.newCourseName = {}; this.newCourseCredit = {}; this.newCourseSemester = {};
+                this.newChildName = {}; this.newChildCredit = {}; this.newChildSemester = {};
+                this.saveToLocal();
+                alert('已恢复出厂设置，自定义默认模板已清除。');
+            }
+        },
+        loadFromLocal() {
+            const raw = localStorage.getItem('AIScheduleTrackerGroup');
+            if (raw) {
+                try {
+                    const saved = JSON.parse(raw);
+                    if (saved.modules && saved.modules.length) {
+                        saved.modules.forEach(module => {
+                            module.items.forEach(item => {
+                                if (item.type === 'group' && item.enableMultiple === undefined) item.enableMultiple = true;
+                                if (item.type === 'course' && item.enableMultiple === undefined) item.enableMultiple = false;
+                            });
+                        });
+                        this.modules = saved.modules;
+                        return;
+                    }
+                } catch(e) {}
+            }
+            let defaultModules = buildFactoryModules();
+            defaultModules = normalizeModules(defaultModules);
+            this.modules = defaultModules;
+            this.modules.forEach(m => { if (this.openedModules[m.id] === undefined) this.openedModules[m.id] = true; });
+        },
+        exportData() {
+            const dataStr = JSON.stringify({ modules: this.modules, exportTime: new Date().toISOString() }, null, 2);
+            const blob = new Blob([dataStr], {type: 'application/json'});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url; a.download = `ai_progress_${new Date().toISOString().slice(0,19)}.json`;
+            a.click(); URL.revokeObjectURL(url);
+        },
+        triggerImport() { document.getElementById('importFile').click(); },
+        importData(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = e => {
+                try {
+                    const imported = JSON.parse(e.target.result);
+                    if (imported.modules && Array.isArray(imported.modules)) {
+                        imported.modules.forEach(module => {
+                            module.items.forEach(item => {
+                                if (item.type === 'group' && item.enableMultiple === undefined) item.enableMultiple = true;
+                                if (item.type === 'course' && item.enableMultiple === undefined) item.enableMultiple = false;
+                            });
+                        });
+                        this.modules = imported.modules;
+                        this.saveToLocal();
+                        alert('导入成功！');
+                    } else alert('文件格式错误');
+                } catch(err) { alert('解析失败'); }
+                event.target.value = '';
+            };
+            reader.readAsText(file);
+        }
+    }
+});
+</script>
+</body>
+</html>
